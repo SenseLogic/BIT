@@ -13,9 +13,9 @@
    version="1.1"
    inkscape:version="0.92.3 (2405546, 2018-03-11)"
    xml:space="preserve"
-   width="519.30823"
-   height="708.97772"
-   viewBox="0 0 519.30829 708.97768"
+   width="672.39996"
+   height="909.04816"
+   viewBox="0 0 672.40004 909.04811"
    sodipodi:docname="bit.svg"
    inkscape:export-filename="/home/eric/data/WORK/PROJECT/TOOL/BIT/LOGO/bit.png"
    inkscape:export-xdpi="360.04517"
@@ -37,8 +37,8 @@
      id="namedview4"
      showgrid="true"
      inkscape:zoom="0.89001172"
-     inkscape:cx="-473.5868"
-     inkscape:cy="247.68395"
+     inkscape:cx="-135.00657"
+     inkscape:cy="493.34442"
      inkscape:window-x="0"
      inkscape:window-y="30"
      inkscape:window-maximized="1"
@@ -52,23 +52,24 @@
        id="grid3748"
        spacingx="30"
        spacingy="30"
-       originx="-56.273251"
-       originy="-601.02222" /></sodipodi:namedview><g
+       originx="20.272662"
+       originy="-463.5306" /></sodipodi:namedview><g
      inkscape:groupmode="layer"
      id="layer1"
      inkscape:label="title"
      style="display:inline"
-     transform="translate(-605.83219,-244.52463)"><text
+     transform="translate(-529.28629,-181.94576)"><text
    transform="scale(0.89719219,1.1145884)"
-   style="font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15.16309547px;line-height:0%;font-family:Times;-inkscape-font-specification:Times-Roman;writing-mode:lr-tb;display:inline;fill:#ff1804;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.26359141"
+   style="font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20.69922447px;line-height:0%;font-family:Times;-inkscape-font-specification:Times-Roman;writing-mode:lr-tb;display:inline;fill:#ff1804;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.72493541"
    id="text24"
-   x="715.07855"
-   y="810.61523"><tspan
-     x="715.07855"
+   x="623.95459"
+   y="933.97162"><tspan
+     x="623.95459"
      sodipodi:role="line"
      id="tspan28"
-     y="810.61523"
-     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:269.56613159px;line-height:1.25;font-family:Orbitron;-inkscape-font-specification:Orbitron;fill:#ff1804;fill-opacity:1;stroke-width:1.26359141">BIT</tspan></text>
+     y="933.97162"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:367.98620605px;line-height:1.25;font-family:Orbitron;-inkscape-font-specification:Orbitron;fill:#ff1804;fill-opacity:1;stroke-width:1.72493541">BIT</tspan></text>
+
 
 
 
@@ -138,4 +139,11 @@
      height="90"
      width="90.000008"
      id="rect4654"
-     style="fill:#0480ff;fill-opacity:1;stroke:none;stroke-width:1.5;stroke-opacity:1" /></g></g></svg>
+     style="fill:#0480ff;fill-opacity:1;stroke:none;stroke-width:1.5;stroke-opacity:1" /></g><rect
+   id="rect828"
+   width="422.44519"
+   height="422.44519"
+   x="653.33636"
+   y="248.30197"
+   style="fill:none;stroke:#003872;stroke-width:32.71242523;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+   ry="51.63525" /></g></svg>
