@@ -98,7 +98,9 @@ class FILE
     bool IsBaseFragment(
         )
     {
-        return IsFragment && Path.endsWith( ".0" );
+        return
+            IsFragment
+            && Path.endsWith( ".0" );
     }
 
     // -- OPERATIONS
@@ -589,7 +591,6 @@ void RemoveFragmentFiles(
     )
 {
     ReadFragmentFiles();
-    ReadSourceFiles();
 
     foreach ( fragment_file; FragmentFileArray )
     {
@@ -619,17 +620,14 @@ void WriteGitFile(
 
     if ( git_file_text != "" )
     {
-        git_file_text ~= "\n";
+        git_file_text ~= "\n\n";
     }
 
     git_file_text ~= GitFileComment ~ "\n";
 
-    foreach ( fragment_file; FragmentFileArray )
+    foreach ( source_file; SourceFileArray )
     {
-        if ( fragment_file.IsBaseFragment() )
-        {
-            git_file_text ~= fragment_file.GetBaseRelativePath() ~ "\n";
-        }
+        git_file_text ~= source_file.RelativePath ~ "\n";
     }
 
     GitFilePath.WriteText( git_file_text );
@@ -641,6 +639,7 @@ void SplitSourceFiles(
     )
 {
     RemoveFragmentFiles();
+    ReadSourceFiles();
 
     foreach ( source_file; SourceFileArray )
     {
@@ -681,7 +680,7 @@ void main(
     FragmentFolderPath = SourceFolderPath ~ ".bit/";
     GitFolderPath = SourceFolderPath ~ ".git/";
     GitFilePath = SourceFolderPath ~ ".gitignore";
-    GitFileComment = "# large files";
+    GitFileComment = "# Large files";
 
     while ( argument_array.length >= 1
             && argument_array[ 0 ].startsWith( "--" ) )
