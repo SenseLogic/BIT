@@ -606,31 +606,38 @@ void WriteGitFile(
     string
         git_file_text;
 
-    if ( GitFilePath.exists() )
+    if ( GitFilePath.exists()
+         || SourceFileArray.length > 0 )
     {
-        git_file_text = GitFilePath.ReadText();
+        if ( GitFilePath.exists() )
+        {
+            git_file_text = GitFilePath.ReadText();
+        }
+
+        if ( git_file_text.indexOf( GitFileComment ) >= 0 )
+        {
+            git_file_text = git_file_text.split( GitFileComment )[ 0 ];
+        }
+
+        git_file_text = git_file_text.stripRight();
+
+        if ( SourceFileArray.length > 0 )
+        {
+            if ( git_file_text != "" )
+            {
+                git_file_text ~= "\n\n";
+            }
+
+            git_file_text ~= GitFileComment ~ "\n";
+
+            foreach ( source_file; SourceFileArray )
+            {
+                git_file_text ~= source_file.RelativePath ~ "\n";
+            }
+        }
+
+        GitFilePath.WriteText( git_file_text );
     }
-
-    if ( git_file_text.indexOf( GitFileComment ) >= 0 )
-    {
-        git_file_text = git_file_text.split( GitFileComment )[ 0 ];
-    }
-
-    git_file_text = git_file_text.stripRight();
-
-    if ( git_file_text != "" )
-    {
-        git_file_text ~= "\n\n";
-    }
-
-    git_file_text ~= GitFileComment ~ "\n";
-
-    foreach ( source_file; SourceFileArray )
-    {
-        git_file_text ~= source_file.RelativePath ~ "\n";
-    }
-
-    GitFilePath.WriteText( git_file_text );
 }
 
 // ~~
