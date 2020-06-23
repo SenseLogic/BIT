@@ -702,7 +702,7 @@ void main(
         writeln( "    --split <size> : find all files larger than `size` in the current folder, split them into fragments inside the `.bit/` folder, and update the `.gitignore` file" );
         writeln( "    --join : rebuild all large files from the fragments stored inside the `.bit/` folder" );
         writeln( "Examples :" );
-        writeln( "    bit --split 20m" );
+        writeln( "    bit --split 50m" );
         writeln( "    bit --join" );
 
         Abort( "Invalid arguments : " ~ argument_array.to!string() );
