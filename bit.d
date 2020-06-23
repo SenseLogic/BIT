@@ -106,11 +106,22 @@ class FILE
     void Remove(
         )
     {
+        string
+            folder_path;
+
         Path.RemoveFile();
 
-        if ( Path.GetFolderPath().IsEmptyFolder() )
+        if ( IsFragment )
         {
-            RemoveFolder( Path.GetFolderPath() );
+            folder_path = Path.GetFolderPath();
+
+            while ( folder_path.exists()
+                    && folder_path != FragmentFolderPath
+                    && folder_path.IsEmptyFolder() )
+            {
+                folder_path.RemoveFolder();
+                folder_path = folder_path.split( '/' )[ 0 .. $ - 2 ].join( '/' ) ~ '/';
+            }
         }
     }
 
