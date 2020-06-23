@@ -30,10 +30,10 @@ bit [options]
 ### Examples
 
 ```bash
-bit --split 20m
+bit --split 50m
 ```
 
-Finds files larger than 20 megabytes in the current folder, splits them into fragments inside the `.bit/` folder and updates the `.gitignore` file.
+Finds files larger than 50 megabytes in the current folder, splits them into fragments inside the `.bit/` folder and updates the `.gitignore` file.
 
 ```bash
 bit --join
