@@ -201,6 +201,7 @@ class FILE
 long
     FragmentByteCount;
 string
+    GitFolderPath,
     GitFileComment,
     GitFilePath,
     FragmentFolderPath,
@@ -526,13 +527,14 @@ FILE[] GetFileArray(
         foreach ( folder_entry; dirEntries( folder_path, SpanMode.depth ) )
         {
             if ( folder_entry.isFile
-                 && !folder_entry.isSymlink
-                 && folder_entry.size >= minimum_byte_count )
+                 && !folder_entry.isSymlink )
             {
                 file_path = folder_entry.name;
 
-                if ( excluded_folder_path == ""
-                     || !file_path.startsWith( excluded_folder_path ) )
+                if ( file_is_fragment
+                     || ( folder_entry.size >= FragmentByteCount + 1
+                          && !file_path.startsWith( FragmentFolderPath )
+                          && !file_path.startsWith( GitFolderPath ) ) )
                 {
                     file = new FILE();
                     file.Path = file_path;
@@ -567,7 +569,7 @@ void ReadFragmentFiles(
 void ReadSourceFiles(
     )
 {
-    SourceFileArray = GetFileArray( SourceFolderPath, false, FragmentFolderPath, FragmentByteCount + 1 );
+    SourceFileArray = GetFileArray( SourceFolderPath, false );
 }
 
 // ~~
@@ -666,6 +668,7 @@ void main(
 
     SourceFolderPath = "./";
     FragmentFolderPath = SourceFolderPath ~ ".bit/";
+    GitFolderPath = SourceFolderPath ~ ".git/";
     GitFilePath = SourceFolderPath ~ ".gitignore";
     GitFileComment = "# large files";
 
