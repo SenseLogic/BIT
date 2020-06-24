@@ -23,7 +23,8 @@ bit [options]
 ### Options
 
 ```
---split <size> : find files larger than `size` in the current folder, split them into fragments inside the `.bit/` folder and update the `.gitignore` file
+--split <size> : find non-excluded files larger than `size` in the current folder,
+                 split them inside the `.bit/` folder and append them to the `.gitignore` file
 --join : rebuild large files from the fragments stored inside the `.bit/` folder
 ```
 
@@ -33,13 +34,18 @@ bit [options]
 bit --split 50m
 ```
 
-Finds files larger than 50 megabytes in the current folder, splits them into fragments inside the `.bit/` folder and updates the `.gitignore` file.
+Finds non-excluded files larger than 50 megabytes in the current folder,
+splits them inside the `.bit/` folder and append them to the `.gitignore` file.
 
 ```bash
 bit --join
 ```
 
 Rebuilds large files from the fragments stored inside the `.bit/` folder.
+
+## Limitations
+
+*   Only applies a subset of the `.gitignore` syntax.
 
 ## Version
 

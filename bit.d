@@ -3,7 +3,7 @@
 
     https://github.com/senselogic/BIT
 
-    Copyright (C) 2017 Eric Pelzer (ecstatic.coder@gmail.com)
+    Copyright (C) 2020 Eric Pelzer (ecstatic.coder@gmail.com)
 
     Bit is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -185,6 +185,7 @@ class FILE
             writeln( "Writing file : ", source_file_path );
 
             source_file = File( source_file_path, "w" );
+
             for ( fragment_index = 0; true; ++fragment_index )
             {
                 fragment_file_path = GetFragmentFilePath( fragment_index );
@@ -217,8 +218,11 @@ string
     GitFolderPath,
     GitFileComment,
     GitFilePath,
+    GitFileText,
     FragmentFolderPath,
     SourceFolderPath;
+string[]
+    ExcludedFilePathArray;
 FILE[]
     FragmentFileArray,
     SourceFileArray;
@@ -324,22 +328,40 @@ string GetFolderPath(
     string file_path
     )
 {
-    string
-        folder_path;
+    long
+        slash_character_index;
 
-    folder_path = file_path.dirName();
+    slash_character_index = file_path.lastIndexOf( '/' );
 
-    if ( folder_path != "" )
+    if ( slash_character_index >= 0 )
     {
-        folder_path ~= '/';
+        return file_path[ 0 .. slash_character_index + 1 ];
     }
-
-    if ( folder_path == "./" )
+    else
     {
-        folder_path = "";
+        return "";
     }
+}
 
-    return folder_path;
+// ~~
+
+string GetFileName(
+    string file_path
+    )
+{
+    long
+        slash_character_index;
+
+    slash_character_index = file_path.lastIndexOf( '/' );
+
+    if ( slash_character_index >= 0 )
+    {
+        return file_path[ slash_character_index + 1 .. $ ];
+    }
+    else
+    {
+        return file_path;
+    }
 }
 
 // ~~
@@ -519,11 +541,87 @@ void WriteText(
 
 // ~~
 
+bool IsExcludedFilePath(
+    string file_path
+    )
+{
+    bool
+        file_path_is_excluded,
+        file_path_is_included;
+    long
+        asterisk_character_index;
+    string
+        file_name,
+        folder_path,
+        excluded_file_name,
+        excluded_folder_path;
+
+    file_path = file_path[ 2 .. $ ];
+    folder_path = file_path.GetFolderPath();
+    file_name = file_path.GetFileName();
+
+    file_path_is_excluded = false;
+
+    foreach ( excluded_file_path; ExcludedFilePathArray )
+    {
+        file_path_is_included = excluded_file_path.startsWith( '!' );
+
+        if ( file_path_is_included )
+        {
+            excluded_file_path = excluded_file_path[ 1 .. $ ];
+        }
+
+        excluded_folder_path = excluded_file_path.GetFolderPath();
+        excluded_file_name = excluded_file_path.GetFileName();
+
+        if ( excluded_folder_path != "" )
+        {
+            if ( excluded_folder_path.startsWith( '/' ) )
+            {
+                if ( folder_path.startsWith( excluded_folder_path[ 1 .. $ ] ) )
+                {
+                    file_path_is_excluded = !file_path_is_included;
+                }
+            }
+            else
+            {
+                if ( ( "/" ~ folder_path ).endsWith( "/" ~ excluded_folder_path ) )
+                {
+                    file_path_is_excluded = !file_path_is_included;
+                }
+            }
+        }
+
+        if ( excluded_file_name != "" )
+        {
+            asterisk_character_index = excluded_file_name.indexOf( '*' );
+
+            if ( asterisk_character_index >= 0 )
+            {
+                if ( file_name.startsWith( excluded_file_name[ 0 .. asterisk_character_index ] )
+                     && file_name.endsWith( excluded_file_name[ asterisk_character_index + 1 .. $ ] ) )
+                {
+                    file_path_is_excluded = !file_path_is_included;
+                }
+            }
+            else
+            {
+                if ( file_name == excluded_file_name )
+                {
+                    file_path_is_excluded = !file_path_is_included;
+                }
+            }
+        }
+    }
+
+    return file_path_is_excluded;
+}
+
+// ~~
+
 FILE[] GetFileArray(
     string folder_path,
-    bool file_is_fragment,
-    string excluded_folder_path = "",
-    long minimum_byte_count = 0
+    bool file_is_fragment
     )
 {
     string
@@ -542,12 +640,11 @@ FILE[] GetFileArray(
             if ( folder_entry.isFile
                  && !folder_entry.isSymlink )
             {
-                file_path = folder_entry.name;
+                file_path = folder_entry.name.GetLogicalPath();
 
                 if ( file_is_fragment
                      || ( folder_entry.size >= FragmentByteCount + 1
-                          && !file_path.startsWith( FragmentFolderPath )
-                          && !file_path.startsWith( GitFolderPath ) ) )
+                          && !IsExcludedFilePath( file_path ) ) )
                 {
                     file = new FILE();
                     file.Path = file_path;
@@ -600,43 +697,69 @@ void RemoveFragmentFiles(
 
 // ~~
 
+void BuildExcludedFolderPathArray(
+    )
+{
+    ExcludedFilePathArray = [ GitFolderPath[ 1 .. $ ], FragmentFolderPath[ 1 .. $ ] ];
+
+    foreach ( line; GitFileText.replace( "\r", "" ).replace( '\\', '/' ).split( "\n" ) )
+    {
+        line = line.stripRight().GetLogicalPath();
+
+        if ( line != ""
+             && !line.startsWith( '#' ) )
+        {
+            ExcludedFilePathArray ~= line;
+        }
+    }
+}
+
+// ~~
+
+void ReadGitFile(
+    )
+{
+    GitFileText = "";
+
+    if ( GitFilePath.exists() )
+    {
+        GitFileText = GitFilePath.ReadText();
+    }
+
+    if ( GitFileText.indexOf( GitFileComment ) >= 0 )
+    {
+        GitFileText = GitFileText.split( GitFileComment )[ 0 ];
+    }
+
+    GitFileText = GitFileText.stripRight();
+
+    BuildExcludedFolderPathArray();
+}
+
+// ~~
+
 void WriteGitFile(
     )
 {
-    string
-        git_file_text;
-
     if ( GitFilePath.exists()
          || SourceFileArray.length > 0 )
     {
-        if ( GitFilePath.exists() )
-        {
-            git_file_text = GitFilePath.ReadText();
-        }
-
-        if ( git_file_text.indexOf( GitFileComment ) >= 0 )
-        {
-            git_file_text = git_file_text.split( GitFileComment )[ 0 ];
-        }
-
-        git_file_text = git_file_text.stripRight();
-
         if ( SourceFileArray.length > 0 )
         {
-            if ( git_file_text != "" )
+            if ( GitFileText != "" )
             {
-                git_file_text ~= "\n\n";
+                GitFileText ~= "\n\n";
             }
 
-            git_file_text ~= GitFileComment ~ "\n";
+            GitFileText ~= GitFileComment ~ "\n";
 
             foreach ( source_file; SourceFileArray )
             {
-                git_file_text ~= source_file.RelativePath ~ "\n";
+                GitFileText ~= source_file.RelativePath ~ "\n";
             }
         }
 
-        GitFilePath.WriteText( git_file_text );
+        GitFilePath.WriteText( GitFileText );
     }
 }
 
@@ -646,11 +769,17 @@ void SplitSourceFiles(
     )
 {
     RemoveFragmentFiles();
+    ReadGitFile();
     ReadSourceFiles();
 
     foreach ( source_file; SourceFileArray )
     {
         source_file.Split();
+    }
+
+    if ( SourceFileArray.length == 0 )
+    {
+        RemoveFolder( FragmentFolderPath );
     }
 
     WriteGitFile();
@@ -719,8 +848,8 @@ void main(
         writeln( "Usage :" );
         writeln( "    bit [options]" );
         writeln( "Options :" );
-        writeln( "    --split <size> : find all files larger than `size` in the current folder, split them into fragments inside the `.bit/` folder, and update the `.gitignore` file" );
-        writeln( "    --join : rebuild all large files from the fragments stored inside the `.bit/` folder" );
+        writeln( "    --split <size>" );
+        writeln( "    --join" );
         writeln( "Examples :" );
         writeln( "    bit --split 50m" );
         writeln( "    bit --join" );
