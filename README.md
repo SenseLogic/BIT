@@ -25,7 +25,7 @@ bit [options]
 ```
 --split <size> : find non-excluded files larger than `size` in the current folder,
                  split them inside the `.bit/` folder and append them to the `.gitignore` file
---join : rebuild large files from the fragments stored inside the `.bit/` folder
+--join : rebuild the large files from their fragments stored inside the `.bit/` folder
 ```
 
 ### Examples
@@ -41,7 +41,7 @@ splits them inside the `.bit/` folder and append them to the `.gitignore` file.
 bit --join
 ```
 
-Rebuilds large files from the fragments stored inside the `.bit/` folder.
+Rebuilds the large files from their fragments stored inside the `.bit/` folder.
 
 ## Limitations
 
