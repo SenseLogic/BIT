@@ -2,7 +2,7 @@
 
 # Bit
 
-Large file splitter and joiner for Git repositories.
+Big file manager for Git repositories.
 
 ## Installation
 

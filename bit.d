@@ -182,6 +182,7 @@ class FILE
         try
         {
             source_file_path = GetSourceFilePath();
+            CreateFolder( source_file_path.GetFolderPath() );
             writeln( "Writing file : ", source_file_path );
 
             source_file = File( source_file_path, "w" );
