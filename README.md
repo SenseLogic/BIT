@@ -2,7 +2,7 @@
 
 # Bit
 
-Big file manager for Git repositories.
+Large file manager for Git repositories.
 
 ## Installation
 
