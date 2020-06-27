@@ -2,7 +2,7 @@
 
 # Bit
 
-Large file manager for Git repositories.
+Git large file manager.
 
 ## Installation
 
@@ -24,8 +24,17 @@ bit [options]
 
 ```
 --split <size> : find non-excluded files larger than `size` in the current folder,
-                 split them inside the `.bit/` folder and append them to the `.gitignore` file
+                 split them inside the `.bit/` folder and exclude them in the `.gitignore` file
 --join : rebuild the large files from the fragments stored inside the `.bit/` folder
+```
+
+### Size suffixes
+
+```
+b : byte
+k : kilobyte
+m : megabyte
+g : gigabyte
 ```
 
 ### Examples
@@ -35,7 +44,7 @@ bit --split 50m
 ```
 
 Finds non-excluded files larger than 50 megabytes in the current folder,
-splits them inside the `.bit/` folder and append them to the `.gitignore` file.
+splits them inside the `.bit/` folder and excludes them in the `.gitignore` file.
 
 ```bash
 bit --join
