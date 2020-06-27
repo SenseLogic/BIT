@@ -54,7 +54,19 @@ Rebuilds the large files from the fragments stored inside the `.bit/` folder.
 
 ## Limitations
 
-*   Only applies a subset of the `.gitignore` syntax.
+*   Only understands the following subset of the `.gitignore` syntax :
+    *   /PATH/TO/
+    *   !/PATH/TO/
+    *   PATH/TO/
+    *   !PATH/TO/
+    *   /PATH/TO/file.ext
+    *   !/PATH/TO/file.ext
+    *   PATH/TO/file.ext
+    *   !PATH/TO/file.ext
+    *   file.ext
+    *   !file.ext
+    *   file*filter.ext
+    *   !file*filter.ext
 
 ## Version
 
