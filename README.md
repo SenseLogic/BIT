@@ -24,8 +24,8 @@ bit [options]
 
 ```
 --split <size> : find non-excluded files larger than `size` in the current folder,
-                 split them inside the `.bit/` folder and exclude them in the `.gitignore` file
---join : rebuild the large files from the fragments stored inside the `.bit/` folder
+                 split them inside the `.bit/` folder and append their paths to the `.gitignore` file
+--join : rebuild large files from the fragments stored inside the `.bit/` folder
 ```
 
 ### Size suffixes
@@ -44,29 +44,33 @@ bit --split 50m
 ```
 
 Finds non-excluded files larger than 50 megabytes in the current folder,
-splits them inside the `.bit/` folder and excludes them in the `.gitignore` file.
+splits them inside the `.bit/` folder and and appends their paths to the `.gitignore` file.
 
 ```bash
 bit --join
 ```
 
-Rebuilds the large files from the fragments stored inside the `.bit/` folder.
+Rebuilds large files from the fragments stored inside the `.bit/` folder.
 
 ## Limitations
 
 *   Only understands the following subset of the `.gitignore` syntax :
     *   /PATH/TO/
-    *   !/PATH/TO/
+    *   /PATH/TO/file
+    *   /PATH/TO/file*filter
     *   PATH/TO/
-    *   !PATH/TO/
-    *   /PATH/TO/file.ext
-    *   !/PATH/TO/file.ext
-    *   PATH/TO/file.ext
-    *   !PATH/TO/file.ext
+    *   PATH/TO/file
+    *   PATH/TO/file*filter
     *   file.ext
-    *   !file.ext
-    *   file*filter.ext
-    *   !file*filter.ext
+    *   file*filter
+    *   !/PATH/TO/
+    *   !/PATH/TO/file
+    *   !/PATH/TO/file*filter
+    *   !PATH/TO/
+    *   !PATH/TO/file
+    *   !PATH/TO/file*filter
+    *   !file
+    *   !file*filter
 
 ## Version
 
