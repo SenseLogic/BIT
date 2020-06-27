@@ -13,9 +13,9 @@
    version="1.1"
    inkscape:version="0.92.3 (2405546, 2018-03-11)"
    xml:space="preserve"
-   width="672.39996"
-   height="909.04816"
-   viewBox="0 0 672.40004 909.04811"
+   width="589.58765"
+   height="865.81903"
+   viewBox="0 0 589.58771 865.81899"
    sodipodi:docname="bit.svg"
    inkscape:export-filename="/home/eric/data/WORK/PROJECT/TOOL/BIT/LOGO/bit.png"
    inkscape:export-xdpi="360.04517"
@@ -33,14 +33,14 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:window-width="3840"
-     inkscape:window-height="2097"
+     inkscape:window-height="2095"
      id="namedview4"
      showgrid="true"
-     inkscape:zoom="0.89001172"
-     inkscape:cx="-135.00657"
-     inkscape:cy="493.34442"
+     inkscape:zoom="0.62933332"
+     inkscape:cx="199.32519"
+     inkscape:cy="-247.31181"
      inkscape:window-x="0"
-     inkscape:window-y="30"
+     inkscape:window-y="32"
      inkscape:window-maximized="1"
      inkscape:current-layer="layer1"
      fit-margin-top="50"
@@ -52,23 +52,28 @@
        id="grid3748"
        spacingx="30"
        spacingy="30"
-       originx="20.272662"
-       originy="-463.5306" /></sodipodi:namedview><g
+       originx="-19.986981"
+       originy="-506.75971" /></sodipodi:namedview><g
      inkscape:groupmode="layer"
      id="layer1"
      inkscape:label="title"
      style="display:inline"
-     transform="translate(-529.28629,-181.94576)"><text
+     transform="translate(-569.54593,-181.94576)"><text
    transform="scale(0.89719219,1.1145884)"
-   style="font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20.69922447px;line-height:0%;font-family:Times;-inkscape-font-specification:Times-Roman;writing-mode:lr-tb;display:inline;fill:#ff1804;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.72493541"
+   style="font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.75101852px;line-height:0%;font-family:Times;-inkscape-font-specification:Times-Roman;writing-mode:lr-tb;display:inline;fill:#0480ff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.4792515"
    id="text24"
-   x="623.95459"
-   y="933.97162"><tspan
-     x="623.95459"
+   x="671.91986"
+   y="895.18677"><tspan
+     x="671.91986"
      sodipodi:role="line"
      id="tspan28"
-     y="933.97162"
-     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:367.98620605px;line-height:1.25;font-family:Orbitron;-inkscape-font-specification:Orbitron;fill:#ff1804;fill-opacity:1;stroke-width:1.72493541">BIT</tspan></text>
+     y="895.18677"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:315.57363892px;line-height:1.25;font-family:Orbitron;-inkscape-font-specification:Orbitron;fill:#0480ff;fill-opacity:1;stroke-width:1.4792515"><tspan
+   style="letter-spacing:-5.82289505px;word-spacing:0px;stroke-width:1.4792515"
+   id="tspan984">B</tspan><tspan
+   style="letter-spacing:4.39075422px;stroke-width:1.4792515"
+   id="tspan826">I</tspan>T</tspan></text>
+
 
 
 
