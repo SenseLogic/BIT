@@ -37,20 +37,21 @@ m : megabyte
 g : gigabyte
 ```
 
-### File exclusion
+### File exclusion syntax
 
-*   The following syntax can be used :
-    *   # comment
-    *   /PATH/TO/
-    *   !/PATH/TO/
-    *   /PATH/TO/file*filter
-    *   !/PATH/TO/file*filter
-    *   PATH/TO/
-    *   !PATH/TO/
-    *   PATH/TO/file*filter
-    *   !PATH/TO/file*filter
-    *   file*filter
-    *   !file*filter
+```sh
+# comment
+/PATH/TO/
+!/PATH/TO/
+/PATH/TO/file*filter
+!/PATH/TO/file*filter
+PATH/TO/
+!PATH/TO/
+PATH/TO/file*filter
+!PATH/TO/file*filter
+file*filter
+!file*filter
+```
 
 ### Examples
 
