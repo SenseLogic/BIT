@@ -63,6 +63,14 @@ class FILE
 
     // ~~
 
+    string GetIgnoredPath(
+        )
+    {
+        return "/" ~ RelativePath.replace( "[", "\\[" ).replace( "]", "\\]" );
+    }
+
+    // ~~
+
     string GetBaseRelativePath(
         )
     {
@@ -756,7 +764,7 @@ void WriteGitFile(
 
             foreach ( source_file; SourceFileArray )
             {
-                GitFileText ~= "/" ~ source_file.RelativePath ~ "\n";
+                GitFileText ~= source_file.GetIgnoredPath() ~ "\n";
             }
         }
 
