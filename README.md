@@ -60,7 +60,7 @@ bit --split 50m
 ```
 
 Finds non-excluded files larger than 50 megabytes in the current folder,
-splits them inside the `.bit/` folder and update the `.gitignore` file.
+splits them inside the `.bit/` folder and updates the `.gitignore` file.
 
 ```bash
 bit --join
