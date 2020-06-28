@@ -57,10 +57,10 @@ Rebuilds large files from the fragments stored inside the `.bit/` folder.
 *   Only understands this subset of the `.gitignore` syntax :
     *   /PATH/TO/
     *   !/PATH/TO/
-    *   PATH/TO/
-    *   !PATH/TO/
     *   /PATH/TO/file*filter
     *   !/PATH/TO/file*filter
+    *   PATH/TO/
+    *   !PATH/TO/
     *   PATH/TO/file*filter
     *   !PATH/TO/file*filter
     *   file*filter
