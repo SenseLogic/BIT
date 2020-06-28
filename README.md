@@ -39,7 +39,7 @@ g : gigabyte
 
 ### File exclusion
 
-*   The `.gitignore` file can use the following syntax subset :
+*   The `.gitignore` file can use the following syntax :
     *   # comment
     *   /PATH/TO/
     *   !/PATH/TO/
