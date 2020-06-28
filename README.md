@@ -37,6 +37,21 @@ m : megabyte
 g : gigabyte
 ```
 
+### File exclusion
+
+*   The `.gitignore` file can use the following syntax subset :
+    *   # comment
+    *   /PATH/TO/
+    *   !/PATH/TO/
+    *   /PATH/TO/file*filter
+    *   !/PATH/TO/file*filter
+    *   PATH/TO/
+    *   !PATH/TO/
+    *   PATH/TO/file*filter
+    *   !PATH/TO/file*filter
+    *   file*filter
+    *   !file*filter
+
 ### Examples
 
 ```bash
@@ -51,20 +66,6 @@ bit --join
 ```
 
 Rebuilds large files from the fragments stored inside the `.bit/` folder.
-
-## Limitations
-
-*   Only understands this subset of the `.gitignore` syntax :
-    *   /PATH/TO/
-    *   !/PATH/TO/
-    *   /PATH/TO/file*filter
-    *   !/PATH/TO/file*filter
-    *   PATH/TO/
-    *   !PATH/TO/
-    *   PATH/TO/file*filter
-    *   !PATH/TO/file*filter
-    *   file*filter
-    *   !file*filter
 
 ## Version
 
