@@ -28,7 +28,7 @@ bit [options]
 --join : rebuild large files from the fragments stored inside the `.bit/` folder
 ```
 
-### Size suffixes
+### Split size units
 
 ```
 b : byte
@@ -37,7 +37,7 @@ m : megabyte
 g : gigabyte
 ```
 
-### File exclusion syntax
+### Git file exclusion
 
 ```sh
 # comment
