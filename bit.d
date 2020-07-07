@@ -679,7 +679,7 @@ FILE[] GetFileArray(
     )
 {
     string
-        file_path;
+        logical_file_path;
     FILE
         file;
     FILE[]
@@ -689,22 +689,22 @@ FILE[] GetFileArray(
 
     try
     {
-        foreach ( folder_entry; dirEntries( folder_path, SpanMode.depth ) )
+        foreach ( file_path; folder_path.dirEntries( SpanMode.depth ) )
         {
-            if ( folder_entry.isFile
-                 && !folder_entry.isSymlink )
+            if ( file_path.isFile()
+                 && !file_path.isSymlink() )
             {
-                file_path = folder_entry.name.GetLogicalPath();
+                logical_file_path = file_path.name().GetLogicalPath();
 
                 if ( file_is_fragment
-                     || ( folder_entry.size >= FragmentByteCount + 1
-                          && !IsExcludedFilePath( file_path ) ) )
+                     || ( file_path.size() >= FragmentByteCount + 1
+                          && !IsExcludedFilePath( logical_file_path ) ) )
                 {
                     file = new FILE();
-                    file.Path = file_path;
-                    file.RelativePath = file_path[ folder_path.length .. $ ];
-                    file.ModificationTime = folder_entry.timeLastModified;
-                    file.ByteCount = folder_entry.size;
+                    file.Path = logical_file_path;
+                    file.RelativePath = logical_file_path[ folder_path.length .. $ ];
+                    file.ModificationTime = file_path.timeLastModified();
+                    file.ByteCount = file_path.size();
                     file.IsFragment = file_is_fragment;
                     file_array ~= file;
                 }
