@@ -550,15 +550,83 @@ void WriteText(
 
 // ~~
 
+bool IsMatchingFilter(
+    string text,
+    string filter
+    )
+{
+    char
+        filter_character;
+    long
+        asterisk_character_index,
+        filter_character_index;
+
+    asterisk_character_index = filter.indexOf( '*' );
+
+    if ( asterisk_character_index >= 0 )
+    {
+        return
+            text.IsMatchingPrefixFilter( filter[ 0 .. asterisk_character_index ] )
+            && text.IsMatchingSuffixFilter( filter[ asterisk_character_index + 1 .. $ ] );
+    }
+    else if ( text.length == filter.length )
+    {
+        for ( filter_character_index = 0;
+              filter_character_index < filter.length;
+              ++filter_character_index )
+        {
+            filter_character = filter[ filter_character_index ];
+
+            if ( text[ filter_character_index ] != filter_character
+                 && filter_character != '?' )
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+// ~~
+
+bool IsMatchingPrefixFilter(
+    string text,
+    string prefix_filter
+    )
+{
+    return
+        text.length >= prefix_filter.length
+        && text[ 0 .. prefix_filter.length ].IsMatchingFilter( prefix_filter );
+}
+
+// ~~
+
+bool IsMatchingSuffixFilter(
+    string text,
+    string suffix_filter
+    )
+{
+    return
+        text.length >= suffix_filter.length
+        && text[ text.length - suffix_filter.length .. $ ].IsMatchingFilter( suffix_filter );
+}
+
+// ~~
+
 bool IsExcludedFilePath(
     string file_path
     )
 {
     bool
+        excluded_file_name_is_matching,
+        excluded_folder_path_is_matching,
         file_path_is_excluded,
         file_path_is_included;
-    long
-        asterisk_character_index;
     string
         file_name,
         folder_path,
@@ -583,43 +651,20 @@ bool IsExcludedFilePath(
         excluded_folder_path = excluded_file_path.GetFolderPath();
         excluded_file_name = excluded_file_path.GetFileName();
 
-        if ( excluded_folder_path != "" )
-        {
-            if ( excluded_folder_path.startsWith( '/' ) )
-            {
-                if ( folder_path.startsWith( excluded_folder_path[ 1 .. $ ] ) )
-                {
-                    file_path_is_excluded = !file_path_is_included;
-                }
-            }
-            else
-            {
-                if ( ( "/" ~ folder_path ).endsWith( "/" ~ excluded_folder_path ) )
-                {
-                    file_path_is_excluded = !file_path_is_included;
-                }
-            }
-        }
+        excluded_folder_path_is_matching
+            = ( excluded_folder_path == ""
+                || ( excluded_folder_path.startsWith( '/' )
+                     && folder_path.startsWith( excluded_folder_path[ 1 .. $ ] ) )
+                || ( "/" ~ folder_path ).endsWith( "/" ~ excluded_folder_path ) );
 
-        if ( excluded_file_name != "" )
-        {
-            asterisk_character_index = excluded_file_name.indexOf( '*' );
+        excluded_file_name_is_matching
+            = ( excluded_file_name == ""
+                || file_name.IsMatchingFilter( excluded_file_name ) );
 
-            if ( asterisk_character_index >= 0 )
-            {
-                if ( file_name.startsWith( excluded_file_name[ 0 .. asterisk_character_index ] )
-                     && file_name.endsWith( excluded_file_name[ asterisk_character_index + 1 .. $ ] ) )
-                {
-                    file_path_is_excluded = !file_path_is_included;
-                }
-            }
-            else
-            {
-                if ( file_name == excluded_file_name )
-                {
-                    file_path_is_excluded = !file_path_is_included;
-                }
-            }
+        if ( excluded_folder_path_is_matching
+             && excluded_file_name_is_matching )
+        {
+            file_path_is_excluded = !file_path_is_included;
         }
     }
 

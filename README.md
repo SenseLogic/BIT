@@ -4,6 +4,41 @@
 
 Git large file manager.
 
+### Size unit suffixes
+
+```
+b : byte
+k : kilobyte
+m : megabyte
+g : gigabyte
+```
+
+### File exclusion syntax
+
+```sh
+# comment
+/PATH/TO/
+!/PATH/TO/
+/PATH/TO/file_filter
+!/PATH/TO/file_filter
+PATH/TO/
+!PATH/TO/
+PATH/TO/file_filter
+!PATH/TO/file_filter
+file_filter
+!file_filter
+```
+
+### File filter syntax
+
+```
+? : any character
+* : any characters
+```
+## Limitations
+
+* Maximum one asterisk character per file filter.
+
 ## Installation
 
 Install the [DMD 2 compiler](https://dlang.org/download.html) (using the MinGW setup option on Windows).
@@ -26,31 +61,6 @@ bit [options]
 --split <size> : find non-excluded files larger than `size` in the current folder,
                  split them inside the `.bit/` folder and update the `.gitignore` file
 --join : rebuild large files from the fragments stored inside the `.bit/` folder
-```
-
-### Size units
-
-```
-b : byte
-k : kilobyte
-m : megabyte
-g : gigabyte
-```
-
-### File exclusion
-
-```sh
-# comment
-/PATH/TO/
-!/PATH/TO/
-/PATH/TO/file*filter
-!/PATH/TO/file*filter
-PATH/TO/
-!PATH/TO/
-PATH/TO/file*filter
-!PATH/TO/file*filter
-file*filter
-!file*filter
 ```
 
 ### Examples
