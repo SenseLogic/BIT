@@ -25,7 +25,7 @@ import core.time : msecs, Duration;
 import std.conv : to;
 import std.datetime : SysTime;
 import std.file : dirEntries, exists, getAttributes, getTimes, mkdir, mkdirRecurse, read, readText, remove, rmdir, setAttributes, setTimes, write, PreserveAttributes, SpanMode;
-import std.path : baseName, dirName;
+import std.path : baseName, dirName, globMatch;
 import std.stdio : writeln, File;
 import std.string : endsWith, indexOf, join, lastIndexOf, replace, split, startsWith, stripRight, toLower;
 
@@ -550,74 +550,6 @@ void WriteText(
 
 // ~~
 
-bool IsMatchingFilter(
-    string text,
-    string filter
-    )
-{
-    char
-        filter_character;
-    long
-        asterisk_character_index,
-        filter_character_index;
-
-    asterisk_character_index = filter.indexOf( '*' );
-
-    if ( asterisk_character_index >= 0 )
-    {
-        return
-            text.IsMatchingPrefixFilter( filter[ 0 .. asterisk_character_index ] )
-            && text.IsMatchingSuffixFilter( filter[ asterisk_character_index + 1 .. $ ] );
-    }
-    else if ( text.length == filter.length )
-    {
-        for ( filter_character_index = 0;
-              filter_character_index < filter.length;
-              ++filter_character_index )
-        {
-            filter_character = filter[ filter_character_index ];
-
-            if ( text[ filter_character_index ] != filter_character
-                 && filter_character != '?' )
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-// ~~
-
-bool IsMatchingPrefixFilter(
-    string text,
-    string prefix_filter
-    )
-{
-    return
-        text.length >= prefix_filter.length
-        && text[ 0 .. prefix_filter.length ].IsMatchingFilter( prefix_filter );
-}
-
-// ~~
-
-bool IsMatchingSuffixFilter(
-    string text,
-    string suffix_filter
-    )
-{
-    return
-        text.length >= suffix_filter.length
-        && text[ text.length - suffix_filter.length .. $ ].IsMatchingFilter( suffix_filter );
-}
-
-// ~~
-
 bool IsExcludedFilePath(
     string file_path
     )
@@ -659,7 +591,7 @@ bool IsExcludedFilePath(
 
         excluded_file_name_is_matching
             = ( excluded_file_name == ""
-                || file_name.IsMatchingFilter( excluded_file_name ) );
+                || file_name.globMatch( excluded_file_name ) );
 
         if ( excluded_folder_path_is_matching
              && excluded_file_name_is_matching )
