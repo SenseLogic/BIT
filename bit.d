@@ -623,28 +623,39 @@ FILE[] GetFileArray(
     {
         foreach ( file_path; folder_path.dirEntries( SpanMode.depth ) )
         {
-            if ( file_path.isFile()
-                 && !file_path.isSymlink() )
+            try
             {
-                logical_file_path = file_path.name().GetLogicalPath();
-
-                if ( file_is_fragment
-                     || ( file_path.size() >= FragmentByteCount + 1
-                          && !IsExcludedFilePath( logical_file_path ) ) )
+                if ( file_path.isFile()
+                     && !file_path.isSymlink() )
                 {
-                    file = new FILE();
-                    file.Path = logical_file_path;
-                    file.RelativePath = logical_file_path[ folder_path.length .. $ ];
-                    file.ModificationTime = file_path.timeLastModified();
-                    file.ByteCount = file_path.size();
-                    file.IsFragment = file_is_fragment;
-                    file_array ~= file;
+                    logical_file_path = file_path.name().GetLogicalPath();
+
+                    if ( file_is_fragment
+                         || ( file_path.size() >= FragmentByteCount + 1
+                              && !IsExcludedFilePath( logical_file_path ) ) )
+                    {
+                        file = new FILE();
+                        file.Path = logical_file_path;
+                        file.RelativePath = logical_file_path[ folder_path.length .. $ ];
+                        file.ModificationTime = file_path.timeLastModified();
+                        file.ByteCount = file_path.size();
+                        file.IsFragment = file_is_fragment;
+                        file_array ~= file;
+                    }
                 }
+            }
+            catch ( Exception exception )
+            {
+                writeln( exception.msg );
+
+                Abort( "Can't read file : " ~ file_path.GetLogicalPath() );
             }
         }
     }
     catch ( Exception exception )
     {
+        writeln( exception.msg );
+
         Abort( "Can't read folder : " ~ folder_path );
     }
 
