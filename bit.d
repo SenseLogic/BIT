@@ -819,7 +819,6 @@ void main(
             && argument_array[ 0 ].startsWith( "--" ) )
     {
         option = argument_array[ 0 ];
-
         argument_array = argument_array[ 1 .. $ ];
 
         if ( option == "--split"
