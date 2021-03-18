@@ -560,6 +560,8 @@ bool IsExcludedFilePath(
         file_path_is_excluded,
         file_path_is_included;
     string
+        base_excluded_folder_path,
+        base_folder_path,
         file_name,
         folder_path,
         excluded_file_name,
@@ -568,6 +570,7 @@ bool IsExcludedFilePath(
     file_path = file_path[ 2 .. $ ];
     folder_path = file_path.GetFolderPath();
     file_name = file_path.GetFileName();
+    base_folder_path = "/" ~ folder_path;
 
     file_path_is_excluded = false;
 
@@ -582,12 +585,15 @@ bool IsExcludedFilePath(
 
         excluded_folder_path = excluded_file_path.GetFolderPath();
         excluded_file_name = excluded_file_path.GetFileName();
+        base_excluded_folder_path = "/" ~ excluded_folder_path;
 
         excluded_folder_path_is_matching
             = ( excluded_folder_path == ""
                 || ( excluded_folder_path.startsWith( '/' )
-                     && folder_path.startsWith( excluded_folder_path[ 1 .. $ ] ) )
-                || ( "/" ~ folder_path ).endsWith( "/" ~ excluded_folder_path ) );
+                     && ( base_folder_path.startsWith( excluded_folder_path )
+                          || base_folder_path.globMatch( excluded_folder_path ~ "*" ) ) )
+                || ( base_folder_path.indexOf( base_excluded_folder_path ) >= 0
+                     || base_folder_path.globMatch( "*" ~ base_excluded_folder_path ~ "*" ) ) );
 
         excluded_file_name_is_matching
             = ( excluded_file_name == ""
