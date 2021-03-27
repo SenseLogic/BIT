@@ -221,6 +221,8 @@ class FILE
 
 // -- VARIABLES
 
+bool
+    VerboseOptionIsEnabled;
 long
     FragmentByteCount;
 string
@@ -231,7 +233,7 @@ string
     FragmentFolderPath,
     SourceFolderPath;
 string[]
-    ExcludedFilePathArray;
+    FilterArray;
 FILE[]
     FragmentFileArray,
     SourceFileArray;
@@ -550,7 +552,7 @@ void WriteText(
 
 // ~~
 
-bool IsExcludedFilePath(
+bool IsFilter(
     string file_path
     )
 {
@@ -574,17 +576,17 @@ bool IsExcludedFilePath(
 
     file_path_is_excluded = false;
 
-    foreach ( excluded_file_path; ExcludedFilePathArray )
+    foreach ( file_filter; FilterArray )
     {
-        file_path_is_included = excluded_file_path.startsWith( '!' );
+        file_path_is_included = file_filter.startsWith( '!' );
 
         if ( file_path_is_included )
         {
-            excluded_file_path = excluded_file_path[ 1 .. $ ];
+            file_filter = file_filter[ 1 .. $ ];
         }
 
-        excluded_folder_path = excluded_file_path.GetFolderPath();
-        excluded_file_name = excluded_file_path.GetFileName();
+        excluded_folder_path = file_filter.GetFolderPath();
+        excluded_file_name = file_filter.GetFileName();
         base_excluded_folder_path = "/" ~ excluded_folder_path;
 
         excluded_folder_path_is_matching
@@ -603,6 +605,18 @@ bool IsExcludedFilePath(
              && excluded_file_name_is_matching )
         {
             file_path_is_excluded = !file_path_is_included;
+        }
+    }
+
+    if ( VerboseOptionIsEnabled )
+    {
+        if ( file_path_is_excluded )
+        {
+            writeln( "Excluding file : ", file_path );
+        }
+        else
+        {
+            writeln( "Including file : ", file_path );
         }
     }
 
@@ -638,7 +652,7 @@ FILE[] GetFileArray(
 
                     if ( file_is_fragment
                          || ( file_path.size() >= FragmentByteCount + 1
-                              && !IsExcludedFilePath( logical_file_path ) ) )
+                              && !IsFilter( logical_file_path ) ) )
                     {
                         file = new FILE();
                         file.Path = logical_file_path;
@@ -700,10 +714,30 @@ void RemoveFragmentFiles(
 
 // ~~
 
-void BuildExcludedFolderPathArray(
+void AddFilter(
+    string file_filter
     )
 {
-    ExcludedFilePathArray = [ GitFolderPath[ 1 .. $ ], FragmentFolderPath[ 1 .. $ ] ];
+    file_filter = file_filter.replace( "**", "*" );
+    FilterArray ~= file_filter;
+
+    if ( VerboseOptionIsEnabled )
+    {
+        writeln( "Adding filter : ", file_filter );
+    }
+}
+
+// ~~
+
+void BuildFilterArray(
+    )
+{
+    long
+        filter_character_index;
+    string[]
+        part_array;
+
+    FilterArray = [ GitFolderPath[ 1 .. $ ], FragmentFolderPath[ 1 .. $ ] ];
 
     foreach ( line; GitFileText.replace( "\r", "" ).replace( '\\', '/' ).split( "\n" ) )
     {
@@ -712,7 +746,31 @@ void BuildExcludedFolderPathArray(
         if ( line != ""
              && !line.startsWith( '#' ) )
         {
-            ExcludedFilePathArray ~= line;
+            if ( line.startsWith( "!**/" ) )
+            {
+                line = "!" ~ line[ 4 .. $ ];
+            }
+            else if ( line.startsWith( "**/" ) )
+            {
+                line = line[ 3 .. $ ];
+            }
+
+            if ( line.endsWith( "/**" ) )
+            {
+                line = line[ 0 .. $ - 2 ];
+            }
+
+            filter_character_index = line.indexOf( "/**/" );
+
+            if ( filter_character_index >= 0 )
+            {
+                AddFilter( line[ 0 .. filter_character_index ] ~ line[ filter_character_index + 3 .. $ ] );
+                AddFilter( line[ 0 .. filter_character_index + 2 ] ~ line[ filter_character_index + 3 .. $ ] );
+            }
+            else
+            {
+                AddFilter( line );
+            }
         }
     }
 }
@@ -736,7 +794,7 @@ void ReadGitFile(
 
     GitFileText = GitFileText.stripRight();
 
-    BuildExcludedFolderPathArray();
+    BuildFilterArray();
 }
 
 // ~~
@@ -820,6 +878,16 @@ void main(
     GitFolderPath = SourceFolderPath ~ ".git/";
     GitFilePath = SourceFolderPath ~ ".gitignore";
     GitFileComment = "# Large files";
+    VerboseOptionIsEnabled = false;
+
+    foreach_reverse( argument_index, argument; argument_array )
+    {
+        if ( argument == "--verbose" )
+        {
+            argument_array = argument_array[ 0 .. argument_index ] ~ argument_array[ argument_index + 1 .. $ ];
+            VerboseOptionIsEnabled = true;
+        }
+    }
 
     while ( argument_array.length >= 1
             && argument_array[ 0 ].startsWith( "--" ) )
@@ -852,6 +920,7 @@ void main(
         writeln( "Options :" );
         writeln( "    --split <size>" );
         writeln( "    --join" );
+        writeln( "    --verbose" );
         writeln( "Examples :" );
         writeln( "    bit --split 50m" );
         writeln( "    bit --join" );

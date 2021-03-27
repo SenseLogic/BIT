@@ -26,6 +26,7 @@ bit [options]
 --split <size> : find non-excluded files larger than `size` in the current folder,
                  split them inside the `.bit/` folder and exclude them in the `.gitignore` file
 --join : rebuild large files from the fragments stored inside the `.bit/` folder
+--verbose : show the processing messages
 ```
 
 ### Size suffixes
