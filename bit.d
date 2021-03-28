@@ -819,6 +819,11 @@ void WriteGitFile(
                 GitFileText ~= source_file.GetIgnoredPath() ~ "\n";
             }
         }
+        
+        if ( !GitFileText.endsWith( '\n' ) )
+        {
+            GitFileText ~= '\n';
+        }
 
         GitFilePath.WriteText( GitFileText );
     }
