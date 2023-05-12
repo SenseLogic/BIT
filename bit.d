@@ -25,7 +25,7 @@ import core.time : msecs, Duration;
 import std.conv : to;
 import std.datetime : SysTime;
 import std.file : dirEntries, exists, getAttributes, getTimes, mkdir, mkdirRecurse, read, readText, remove, rmdir, setAttributes, setTimes, write, PreserveAttributes, SpanMode;
-import std.path : baseName, dirName, globMatch;
+import std.path : absolutePath, baseName, dirName, globMatch;
 import std.stdio : writeln, File;
 import std.string : endsWith, indexOf, join, lastIndexOf, replace, split, startsWith, stripRight, toLower;
 
@@ -326,6 +326,23 @@ long GetByteCount(
 
 // ~~
 
+string GetPhysicalPath(
+    string path
+    )
+{
+    version( Windows )
+    {
+        if ( path.length > 260 )
+        {
+            return `\\?\` ~ path.absolutePath;
+        }
+    }
+
+    return path;
+}
+
+// ~~
+
 string GetLogicalPath(
     string path
     )
@@ -417,7 +434,7 @@ void CreateFolder(
         {
             writeln( "Creating folder : ", folder_path );
 
-            folder_path.mkdirRecurse();
+            folder_path.GetPhysicalPath().mkdirRecurse();
         }
     }
     catch ( Exception exception )
@@ -436,7 +453,7 @@ void RemoveFolder(
 
     try
     {
-        folder_path.rmdir();
+        folder_path.GetPhysicalPath().rmdir();
     }
     catch ( Exception exception )
     {
@@ -454,7 +471,7 @@ void RemoveFile(
 
     try
     {
-        file_path.remove();
+        file_path.GetPhysicalPath().remove();
     }
     catch ( Exception exception )
     {
@@ -475,7 +492,7 @@ ubyte[] ReadByteArray(
 
     try
     {
-        file_byte_array = cast( ubyte[] )file_path.read();
+        file_byte_array = cast( ubyte[] )file_path.GetPhysicalPath().read();
     }
     catch ( Exception exception )
     {
@@ -492,7 +509,7 @@ void WriteByteArray(
     ubyte[] file_byte_array
     )
 {
-    CreateFolder( file_path.GetFolderPath() );
+    CreateFolder( file_path.GetPhysicalPath().GetFolderPath() );
 
     writeln( "Writing file : ", file_path );
 
@@ -519,7 +536,7 @@ string ReadText(
 
     try
     {
-        file_text = file_path.readText();
+        file_text = file_path.GetPhysicalPath().readText();
     }
     catch ( Exception exception )
     {
@@ -542,7 +559,7 @@ void WriteText(
 
     try
     {
-        file_path.write( file_text );
+        file_path.GetPhysicalPath().write( file_text );
     }
     catch ( Exception exception )
     {
@@ -819,7 +836,7 @@ void WriteGitFile(
                 GitFileText ~= source_file.GetIgnoredPath() ~ "\n";
             }
         }
-        
+
         if ( !GitFileText.endsWith( '\n' ) )
         {
             GitFileText ~= '\n';
