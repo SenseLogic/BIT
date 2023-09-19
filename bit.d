@@ -509,7 +509,7 @@ void WriteByteArray(
     ubyte[] file_byte_array
     )
 {
-    CreateFolder( file_path.GetPhysicalPath().GetFolderPath() );
+    CreateFolder( file_path.GetFolderPath() );
 
     writeln( "Writing file : ", file_path );
 
