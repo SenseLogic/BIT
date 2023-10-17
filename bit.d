@@ -332,10 +332,7 @@ string GetPhysicalPath(
 {
     version( Windows )
     {
-        if ( path.length > 260 )
-        {
-            return `\\?\` ~ path.absolutePath;
-        }
+        return `\\?\` ~ path.absolutePath.replace( '/', '\\' ).replace( "\\.\\", "\\" );
     }
 
     return path;
@@ -515,7 +512,7 @@ void WriteByteArray(
 
     try
     {
-        file_path.write( file_byte_array );
+        file_path.GetPhysicalPath().write( file_byte_array );
     }
     catch ( Exception exception )
     {
@@ -648,7 +645,11 @@ FILE[] GetFileArray(
     )
 {
     string
-        logical_file_path;
+        file_path,
+        physical_file_path,
+        physical_folder_path,
+        relative_file_path,
+        relative_physical_file_path;
     FILE
         file;
     FILE[]
@@ -658,24 +659,29 @@ FILE[] GetFileArray(
 
     try
     {
-        foreach ( file_path; folder_path.dirEntries( SpanMode.depth ) )
+        physical_folder_path = folder_path.GetPhysicalPath();
+
+        foreach ( folder_entry; physical_folder_path.dirEntries( SpanMode.depth ) )
         {
             try
             {
-                if ( file_path.isFile()
-                     && !file_path.isSymlink() )
+                if ( folder_entry.isFile()
+                     && !folder_entry.isSymlink() )
                 {
-                    logical_file_path = file_path.name().GetLogicalPath();
+                    physical_file_path = folder_entry.name();
+                    relative_physical_file_path = physical_file_path[ physical_folder_path.length .. $ ];
+                    relative_file_path = relative_physical_file_path.GetLogicalPath();
+                    file_path = folder_path ~ relative_file_path;
 
                     if ( file_is_fragment
-                         || ( file_path.size() >= FragmentByteCount + 1
-                              && !IsFilter( logical_file_path ) ) )
+                         || ( folder_entry.size() >= FragmentByteCount + 1
+                              && !IsFilter( file_path ) ) )
                     {
                         file = new FILE();
-                        file.Path = logical_file_path;
-                        file.RelativePath = logical_file_path[ folder_path.length .. $ ];
-                        file.ModificationTime = file_path.timeLastModified();
-                        file.ByteCount = file_path.size();
+                        file.Path = file_path;
+                        file.RelativePath = relative_file_path;
+                        file.ModificationTime = folder_entry.timeLastModified();
+                        file.ByteCount = folder_entry.size();
                         file.IsFragment = file_is_fragment;
                         file_array ~= file;
                     }
