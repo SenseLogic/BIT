@@ -566,7 +566,7 @@ void WriteText(
 
 // ~~
 
-bool IsFilter(
+bool IsExcludedFile(
     string file_path
     )
 {
@@ -675,7 +675,7 @@ FILE[] GetFileArray(
 
                     if ( file_is_fragment
                          || ( folder_entry.size() >= FragmentByteCount + 1
-                              && !IsFilter( file_path ) ) )
+                              && !IsExcludedFile( file_path ) ) )
                     {
                         file = new FILE();
                         file.Path = file_path;
